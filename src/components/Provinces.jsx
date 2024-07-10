@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import {useCovidData} from '../context/CovidContext';
 
 const StyledProvinces = styled.form`
   background-color: #f8f9fa;
@@ -26,13 +27,16 @@ const StyledProvinces = styled.form`
 
   .provinces__table {
     color: #64748b;
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 2rem;
   }
 
-  .provinces__table,
-  .provinces__table__cell,
-  .provinces__table__title {
-    border-collapse: collapse;
+  .provinces__table th,
+  .provinces__table td {
     border: 1px solid black;
+    padding: 1rem;
+    text-align: center;
   }
 
   .provinces__table__title {
@@ -45,7 +49,7 @@ const StyledProvinces = styled.form`
     width: 4rem;
   }
 
-  /* Meidum Screen */
+  /* Medium Screen */
   @media (max-width: 991px) {
   }
 
@@ -62,28 +66,44 @@ const StyledProvinces = styled.form`
 `;
 
 const Provinces = () => {
+  const {provinsiIndoData} = useCovidData();
+
+  const formatNumber = (number) => {
+    if (number !== undefined && number !== null) {
+      return number.toLocaleString('id-ID');
+    }
+    return '-';
+  };
+
   return (
     <StyledProvinces>
       <div className="container">
         <h1 className="provinces__title">Indonesia Situation</h1>
         <h5 className="provinces__caption">Data Covid Berdasarkan Indonesia</h5>
         <table className="provinces__table">
-          <tr>
-            <th className="provinces__table__title">No</th>
-            <th className="provinces__table__title">Provinsi</th>
-            <th className="provinces__table__title">Postif</th>
-            <th className="provinces__table__title">Sembuh</th>
-            <th className="provinces__table__title">Dirawat</th>
-            <th className="provinces__table__title">Meninggal</th>
-          </tr>
-          <tr>
-            <td className="provinces__table__cell">1</td>
-            <td className="provinces__table__cell">Jawa Barat</td>
-            <td className="provinces__table__cell">100</td>
-            <td className="provinces__table__cell">50</td>
-            <td className="provinces__table__cell">20</td>
-            <td className="provinces__table__cell">10</td>
-          </tr>
+          <thead>
+            <tr>
+              <th className="provinces__table__title">No</th>
+              <th className="provinces__table__title">Provinsi</th>
+              <th className="provinces__table__title">Positif</th>
+              <th className="provinces__table__title">Sembuh</th>
+              <th className="provinces__table__title">Dirawat</th>
+              <th className="provinces__table__title">Meninggal</th>
+            </tr>
+          </thead>
+          <tbody>
+            {provinsiIndoData &&
+              provinsiIndoData.map((province, index) => (
+                <tr key={index}>
+                  <td className="provinces__table__cell">{index + 1}</td>
+                  <td className="provinces__table__cell">{province.name}</td>
+                  <td className="provinces__table__cell">{formatNumber(province.numbers?.confirmed)}</td>
+                  <td className="provinces__table__cell">{formatNumber(province.numbers?.recovered)}</td>
+                  <td className="provinces__table__cell">{formatNumber(province.numbers?.treatment)}</td>
+                  <td className="provinces__table__cell">{formatNumber(province.numbers?.death)}</td>
+                </tr>
+              ))}
+          </tbody>
         </table>
       </div>
     </StyledProvinces>

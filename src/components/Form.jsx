@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import {useCovidData} from '../context/CovidContext';
 
 const StyledForm = styled.form`
   background-color: white;
@@ -44,7 +45,7 @@ const StyledForm = styled.form`
     padding: 0.2rem;
   }
 
-  /* Meidum Screen */
+  /* Medium Screen */
   @media (max-width: 991px) {
     .form {
       padding-bottom: 5rem;
@@ -81,9 +82,11 @@ const StyledForm = styled.form`
 `;
 
 const Form = () => {
+  const {provinsiIndoData, formData, handleChange, handleSubmit} = useCovidData();
+
   return (
-    <StyledForm>
-      <form action="" className="form">
+    <StyledForm onSubmit={handleSubmit}>
+      <div className="form">
         <div className="form__left">
           <img src="../../src/img/form.png" alt="form.png" className="form__img" />
         </div>
@@ -93,32 +96,37 @@ const Form = () => {
             <label htmlFor="provinsi" className="form__label">
               Provinsi
             </label>
-            <select name="form__provinsi" id="form__provinsi" className="form__input">
-              <option value="Jawa Barat">Jawa Barat</option>
+            <select name="provinsi" id="provinsi" className="form__input" value={formData.provinsi} onChange={handleChange}>
+              {provinsiIndoData &&
+                provinsiIndoData.map((province, index) => (
+                  <option key={index} value={province.name}>
+                    {province.name}
+                  </option>
+                ))}
             </select>
           </div>
           <div className="form__input__part">
             <label htmlFor="status" className="form__label">
               Status
             </label>
-            <select name="form__status" id="form__status" className="form__input">
-              <option value="positif">Positif</option>
-              <option value="sembuh">Sembuh</option>
-              <option value="dirawat">Dirawat</option>
-              <option value="meninggal">Meninggal</option>
+            <select name="status" id="status" className="form__input" value={formData.status} onChange={handleChange}>
+              <option value="confirmed">Positif</option>
+              <option value="recovered">Sembuh</option>
+              <option value="treatment">Dirawat</option>
+              <option value="death">Meninggal</option>
             </select>
           </div>
           <div className="form__input__part">
             <label htmlFor="jumlah" className="form__label">
               Jumlah
             </label>
-            <input type="number" className="form__input" />
+            <input type="number" name="jumlah" id="jumlah" className="form__input" value={formData.jumlah} onChange={handleChange} />
           </div>
           <button className="form__button" type="submit">
             Submit
           </button>
         </div>
-      </form>
+      </div>
     </StyledForm>
   );
 };

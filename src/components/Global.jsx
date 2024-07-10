@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import {useCovidData} from '../context/CovidContext';
 
 const StyledGlobal = styled.div`
   background-color: #f8f9fa;
@@ -56,7 +57,7 @@ const StyledGlobal = styled.div`
     font-size: 2rem;
   }
 
-  /* Meidum Screen */
+  /* Medium Screen */
   @media (max-width: 991px) {
     .global__card {
       margin: 1rem;
@@ -89,6 +90,16 @@ const StyledGlobal = styled.div`
 `;
 
 const Global = () => {
+  const {globalData} = useCovidData();
+
+  if (!globalData) {
+    return <div>Loading...</div>;
+  }
+
+  const confirmed = globalData.find((item) => item.status === 'confirmed')?.total || 0;
+  const recovered = globalData.find((item) => item.status === 'recovered')?.total || 0;
+  const death = globalData.find((item) => item.status === 'death')?.total || 0;
+
   return (
     <StyledGlobal>
       <div className="container">
@@ -97,15 +108,15 @@ const Global = () => {
         <div className="global__cards">
           <div className="global__card">
             <h3 className="global__card__title">Confirmed</h3>
-            <div className="global__card__confirmed">00000</div>
+            <div className="global__card__confirmed">{confirmed.toLocaleString('en', {useGrouping: true}).replace(/,/g, '.')}</div>
           </div>
           <div className="global__card">
             <h3 className="global__card__title">Recovered</h3>
-            <div className="global__card__recovered">00000</div>
+            <div className="global__card__recovered">{recovered.toLocaleString('en', {useGrouping: true}).replace(/,/g, '.')}</div>
           </div>
           <div className="global__card">
             <h3 className="global__card__title">Death</h3>
-            <div className="global__card__death">00000</div>
+            <div className="global__card__death">{death.toLocaleString('en', {useGrouping: true}).replace(/,/g, '.')}</div>
           </div>
         </div>
       </div>

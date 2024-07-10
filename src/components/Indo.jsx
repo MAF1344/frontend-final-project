@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import {useCovidData} from '../context/CovidContext';
 
 const StyledIndo = styled.div`
   background-color: #f8f9fa;
@@ -56,7 +57,7 @@ const StyledIndo = styled.div`
     font-size: 2rem;
   }
 
-  /* Meidum Screen */
+  /* Medium Screen */
   @media (max-width: 991px) {
     .indo__card {
       margin: 1rem;
@@ -89,24 +90,21 @@ const StyledIndo = styled.div`
 `;
 
 const Indo = () => {
+  const {indoData} = useCovidData();
+
   return (
     <StyledIndo>
       <div className="container">
         <h1 className="indo__title">Indonesia Situation</h1>
         <h5 className="indo__caption">Data Covid Berdasarkan Indonesia</h5>
         <div className="indo__cards">
-          <div className="indo__card">
-            <h3 className="indo__card__title">Confirmed</h3>
-            <div className="indo__card__confirmed">00000</div>
-          </div>
-          <div className="indo__card">
-            <h3 className="indo__card__title">Recovered</h3>
-            <div className="indo__card__recovered">00000</div>
-          </div>
-          <div className="indo__card">
-            <h3 className="indo__card__title">Death</h3>
-            <div className="indo__card__death">00000</div>
-          </div>
+          {indoData &&
+            indoData.map((data, index) => (
+              <div key={index} className="indo__card">
+                <h3 className="indo__card__title">{data.status.charAt(0).toUpperCase() + data.status.slice(1)}</h3>
+                <div className={`indo__card__${data.status}`}>{data.total.toLocaleString('en', {useGrouping: true}).replace(/,/g, '.')}</div>
+              </div>
+            ))}
         </div>
       </div>
     </StyledIndo>

@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import {useCovidData} from '../context/CovidContext';
 
 const SyledRegions = styled.div`
   text-align: center;
@@ -96,7 +97,7 @@ const SyledRegions = styled.div`
     width: 1.5rem;
   }
 
-  /* Meidum Screen */
+  /* Medium Screen */
   @media (max-width: 991px) {
     .region__caption {
       margin-top: 0.5rem;
@@ -128,44 +129,49 @@ const SyledRegions = styled.div`
 `;
 
 const Regions = () => {
+  const {regionGlobalData} = useCovidData(); // Mengambil regionGlobalData dari CovidContext
+
   return (
     <SyledRegions>
       <div className="container">
         <h1 className="region__title">Situations by Regions</h1>
         <h5 className="region__caption">Bacaan Pilihan Covid</h5>
         <div className="region__cards">
-          <div className="region__card">
-            <h3 className="region__card__title">Europe</h3>
-            <div className="region__card__content">
-              <div className="region__card__confirmed">
-                <div className="region__card__confirmed__left">
-                  <h4 className="region__card__confirmed__title">Confirmed</h4>
-                  <p className="region__card__confirmed__value">00000</p>
-                </div>
-                <div className="region__card__confirmed__right">
-                  <img src="../../src/img/confirmed.png" alt="confirmed" className="region__card__confirmed__img" />
+          {regionGlobalData &&
+            regionGlobalData.map((region, index) => (
+              <div key={index} className="region__card">
+                <h3 className="region__card__title">{region.name}</h3>
+                <div className="region__card__content">
+                  <div className="region__card__confirmed">
+                    <div className="region__card__confirmed__left">
+                      <h4 className="region__card__confirmed__title">Confirmed</h4>
+                      <p className="region__card__confirmed__value">{region.numbers.confirmed.toLocaleString('en', {useGrouping: true}).replace(/,/g, '.')}</p>
+                    </div>
+                    <div className="region__card__confirmed__right">
+                      <img src="../../src/img/confirmed.png" alt="confirmed" className="region__card__confirmed__img" />
+                    </div>
+                  </div>
+                  <div className="region__card__recovered">
+                    <div className="region__card__recovered__left">
+                      <h4 className="region__card__recovered__title">Recovered</h4>
+                      <p className="region__card__recovered__value">{region.numbers.recovered.toLocaleString('en', {useGrouping: true}).replace(/,/g, '.')}</p>
+                    </div>
+                    <div className="region__card__recovered__right">
+                      <img src="../../src/img/recovered.png" alt="recovered" className="region__card__recovered__img" />
+                    </div>
+                  </div>
+                  <div className="region__card__death">
+                    <div className="region__card__death__left">
+                      <h4 className="region__card__death__title">Death</h4>
+                      <p className="region__card__death__value">{region.numbers.death.toLocaleString('en', {useGrouping: true}).replace(/,/g, '.')}</p>
+                    </div>
+                    <div className="region__card__death__right">
+                      <img src="../../src/img/death.png" alt="death" className="region__card__death__img" />
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div className="region__card__recovered">
-                <div className="region__card__recovered__left">
-                  <h4 className="region__card__recovered__title">Recovered</h4>
-                  <p className="region__card__recovered__value">00000</p>
-                </div>
-                <div className="region__card__recovered__right">
-                  <img src="../../src/img/recovered.png" alt="recovered" className="region__card__recovered__img" />
-                </div>
-              </div>
-              <div className="region__card__death">
-                <div className="region__card__death__left">
-                  <h4 className="region__card__death__title">Death</h4>
-                  <p className="region__card__death__value">00000</p>
-                </div>
-                <div className="region__card__death__right">
-                  <img src="../../src/img/death.png" alt="death" className="region__card__death__img" />
-                </div>
-              </div>
-            </div>
-          </div>
+            ))}
         </div>
       </div>
     </SyledRegions>
